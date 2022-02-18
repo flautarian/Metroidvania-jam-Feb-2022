@@ -51,9 +51,11 @@ public class PlayerController : MonoBehaviour
             ? Input.GetAxisRaw("Horizontal") 
             : 0f;
         vertical = Input.GetAxisRaw("Vertical");
-
-        if(Input.GetButtonDown("Jump") && !animator.GetBool(Constants.PLAYER_ANIM_BOOL_JUMP)) {
-            if(jumpTimeCounter > 0){
+        
+        if(vertical >= 0f 
+            && Input.GetButtonDown("Jump") 
+            && !animator.GetBool(Constants.PLAYER_ANIM_BOOL_JUMP)) {
+            if(!grounded && jumpTimeCounter > 0){
                 animator.SetBool(Constants.PLAYER_ANIM_BOOL_DOUBLE_JUMP, true);
                 jumpTimeCounter = 0;
                 rb.velocity = new Vector2(rb.velocity.x, forceJump);
@@ -75,6 +77,7 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetButtonUp("Jump")){
             animator.SetBool(Constants.PLAYER_ANIM_BOOL_JUMP, false);
+            jumpTimeCounter = grounded ? 0 : jumpTimeCounter;
             if(jumpTimeCounter == 0) animator.SetBool(Constants.PLAYER_ANIM_BOOL_DOUBLE_JUMP, false);
         }
 
@@ -82,7 +85,7 @@ public class PlayerController : MonoBehaviour
 
     private void ManageAnimations(){
         animator.SetBool(Constants.PLAYER_ANIM_BOOL_RUN, horizontal != 0);
-        if(horizontal != 0)spriteRenderer.flipX = horizontal < 0.0f;
+        if(Input.GetAxisRaw("Horizontal") != 0)spriteRenderer.flipX = Input.GetAxisRaw("Horizontal") < 0.0f;
         animator.SetBool(Constants.PLAYER_ANIM_BOOL_DUCK, vertical < 0.0f);
     }
 
@@ -100,7 +103,7 @@ public class PlayerController : MonoBehaviour
         Debug.DrawRay(col.bounds.center - new Vector3(col.bounds.extents.x, 0), Vector2.down * (col.bounds.extents.y + extraHeightText), rayColor);
         Debug.DrawRay(col.bounds.center - new Vector3(col.bounds.extents.x, col.bounds.extents.y + extraHeightText), Vector2.right * (col.bounds.extents.x * 2f), rayColor);
 
-        Debug.Log(raycastHit.collider);
+        //Debug.Log(raycastHit.collider);
         return raycastHit.collider != null;
     }
 }
