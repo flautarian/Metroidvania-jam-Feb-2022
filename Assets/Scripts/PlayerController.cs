@@ -17,6 +17,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float jumpTime;
     private float jumpTimeCounter;
+
+    [SerializeField]
+    private float slashForce;
+    [SerializeField]
+    private float slashForceValue;
     private Rigidbody2D rb;
     private CapsuleCollider2D col;
     [SerializeField]
@@ -43,28 +48,47 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate() {
         grounded = IsGrounded();
         animator.SetBool(Constants.PLAYER_ANIM_BOOL_FALL, !grounded);
-        rb.velocity = new Vector2( horizontal * velocity, rb.velocity.y);
+        if(slashForceValue != 0){
+            slashForceValue = Mathf.Abs(slashForceValue) < 0.1f ? 0 : Mathf.Lerp(slashForceValue, 0, 8f * Time.deltaTime);
+        }
+        rb.velocity = new Vector2( (horizontal * velocity) + (slashForceValue), rb.velocity.y);
     }
 
     private void ManagePlayerMovement(){
-        horizontal = !animator.GetBool(Constants.PLAYER_ANIM_BOOL_DUCK) 
+        horizontal = CanMove() 
             ? Input.GetAxisRaw("Horizontal") 
             : 0f;
         vertical = Input.GetAxisRaw("Vertical");
-        
-        if(vertical >= 0f 
-            && Input.GetButtonDown("Jump") 
-            && !animator.GetBool(Constants.PLAYER_ANIM_BOOL_JUMP)) {
-            if(!grounded && jumpTimeCounter > 0){
-                animator.SetBool(Constants.PLAYER_ANIM_BOOL_DOUBLE_JUMP, true);
-                jumpTimeCounter = 0;
-                rb.velocity = new Vector2(rb.velocity.x, forceJump);
+        if(vertical >= 0f){
+            // de pie
+            if(Input.GetButtonDown("Jump") 
+                && !animator.GetBool(Constants.PLAYER_ANIM_BOOL_JUMP)) {
+                if(!grounded && jumpTimeCounter > 0){
+                    animator.SetBool(Constants.PLAYER_ANIM_BOOL_DOUBLE_JUMP, true);
+                    jumpTimeCounter = 0;
+                    rb.velocity = new Vector2(rb.velocity.x, forceJump + 2);
+                }
+                else if(grounded){
+                    animator.SetBool(Constants.PLAYER_ANIM_BOOL_JUMP, true);
+                    jumpTimeCounter = jumpTime;
+                    rb.velocity = new Vector2(rb.velocity.x, forceJump);
+                }
             }
-            else if(grounded){
-                animator.SetBool(Constants.PLAYER_ANIM_BOOL_JUMP, true);
-                jumpTimeCounter = jumpTime;
-                rb.velocity = new Vector2(rb.velocity.x, forceJump);
+
+            if(Input.GetButtonDown("Fire1")){
+                if(grounded && !animator.GetBool(Constants.PLAYER_ANIM_BOOL_ATTACK)){
+                    animator.SetBool(Constants.PLAYER_ANIM_BOOL_ATTACK, true);    
+                }
+                else if(!grounded && !animator.GetBool(Constants.PLAYER_ANIM_BOOL_AIR_ATTACK)){
+                    animator.SetBool(Constants.PLAYER_ANIM_BOOL_AIR_ATTACK, true);    
+                }
             }
+        }
+        else{
+            // agachado
+            if(Input.GetButtonDown("Fire1") && !animator.GetBool(Constants.PLAYER_ANIM_BOOL_DUCK_SLASH)){
+                animator.SetBool(Constants.PLAYER_ANIM_BOOL_DUCK_SLASH, true);
+            } 
         }
 
         if(Input.GetButton("Jump") && animator.GetBool(Constants.PLAYER_ANIM_BOOL_JUMP)){
@@ -89,6 +113,10 @@ public class PlayerController : MonoBehaviour
         animator.SetBool(Constants.PLAYER_ANIM_BOOL_DUCK, vertical < 0.0f);
     }
 
+    private bool CanMove(){
+        return !animator.GetBool(Constants.PLAYER_ANIM_BOOL_DUCK) && !animator.GetBool(Constants.PLAYER_ANIM_BOOL_ATTACK);
+    }
+
     private bool IsGrounded() {
         float extraHeightText = 0.05f;
         RaycastHit2D raycastHit = Physics2D.BoxCast(col.bounds.center, col.bounds.size, 0f, Vector2.down, extraHeightText, platformLayerMask);
@@ -105,5 +133,9 @@ public class PlayerController : MonoBehaviour
 
         //Debug.Log(raycastHit.collider);
         return raycastHit.collider != null;
+    }
+
+    private void DuckSlash(){
+        slashForceValue = slashForce * (spriteRenderer.flipX ? -1 : 1);
     }
 }
