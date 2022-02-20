@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     private float forceJump;
     [SerializeField]
     private float jumpTime;
-    private float jumpTimeCounter;
+    internal float jumpTimeCounter;
 
     [SerializeField]
     private float slashForce;
@@ -30,12 +30,22 @@ public class PlayerController : MonoBehaviour
     private Vector2 duckCol, jumpCol, normalCol;
     Animator animator;
     SpriteRenderer spriteRenderer;
+    [SerializeField]
+    internal int maxLife;
+    [SerializeField]
+    internal int currentLife;
+
+    [SerializeField]
+    private BoxCollider2D leftAttackCollider,rightAttackCollider;
     void Start()
     {
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<CapsuleCollider2D>();
+        leftAttackCollider.enabled = false;
+        rightAttackCollider.enabled = false;
+        currentLife = maxLife;
     }
 
     // Update is called once per frame
@@ -51,7 +61,7 @@ public class PlayerController : MonoBehaviour
         if(slashForceValue != 0){
             slashForceValue = Mathf.Abs(slashForceValue) < 0.1f ? 0 : Mathf.Lerp(slashForceValue, 0, 8f * Time.deltaTime);
         }
-        rb.velocity = new Vector2( (horizontal * velocity) + (slashForceValue), rb.velocity.y);
+        if(!animator.GetBool(Constants.ANIM_BOOL_HURT)) rb.velocity = new Vector2( (horizontal * velocity) + slashForceValue, rb.velocity.y);
     }
 
     private void ManagePlayerMovement(){
@@ -109,12 +119,42 @@ public class PlayerController : MonoBehaviour
 
     private void ManageAnimations(){
         animator.SetBool(Constants.PLAYER_ANIM_BOOL_RUN, horizontal != 0);
-        if(Input.GetAxisRaw("Horizontal") != 0)spriteRenderer.flipX = Input.GetAxisRaw("Horizontal") < 0.0f;
+        if(Input.GetAxisRaw("Horizontal") != 0 && CanMove())spriteRenderer.flipX = Input.GetAxisRaw("Horizontal") < 0.0f;
         animator.SetBool(Constants.PLAYER_ANIM_BOOL_DUCK, vertical < 0.0f);
     }
 
     private bool CanMove(){
-        return !animator.GetBool(Constants.PLAYER_ANIM_BOOL_DUCK) && !animator.GetBool(Constants.PLAYER_ANIM_BOOL_ATTACK);
+        return !animator.GetBool(Constants.PLAYER_ANIM_BOOL_DUCK) 
+            && !animator.GetBool(Constants.PLAYER_ANIM_BOOL_ATTACK)
+            && !animator.GetBool(Constants.ANIM_BOOL_HURT);
+    }
+    private void OnCollisionEnter2D(Collision2D other) {
+        if(Constants.TAG_ENEMY.Equals(other.gameObject.tag) &&
+            !animator.GetBool(Constants.ANIM_BOOL_HURT)){
+            if(other.gameObject.TryGetComponent<EnemyController>(out EnemyController e)){
+                currentLife -= e.attack;
+                if(currentLife <= 0)
+                    animator.SetBool(Constants.ANIM_BOOL_DIE, true);
+                else{
+                    animator.SetBool(Constants.ANIM_BOOL_HURT, true);
+                    rb.AddForce( new Vector2(other.transform.position.x > transform.position.x ? -5 : 5, 10), ForceMode2D.Impulse );
+                }
+                
+            }
+        }
+    }
+
+    private void SetAttackColliderState(int state){
+        if(state == 1){
+            if(spriteRenderer.flipX)
+                leftAttackCollider.enabled = true;
+            else 
+                rightAttackCollider.enabled = true; 
+        }
+        else{
+            leftAttackCollider.enabled = false;
+            rightAttackCollider.enabled = false;
+        }
     }
 
     private bool IsGrounded() {
