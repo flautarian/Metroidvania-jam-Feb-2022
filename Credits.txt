@@ -4,6 +4,7 @@ https://rvros.itch.io/animated-pixel-hero
 https://o-lobster.itch.io/platformmetroidvania-pixel-art-asset-pack
 https://oco.itch.io/medieval-fantasy-props-pack
 https://aamatniekss.itch.io/lava-caves-tileset
+https://oco.itch.io/medieval-fantasy-character-pack
 
 SHADERS
 https://ax23w4.itch.io/lightrays-2d-effect
@@ -13,5 +14,8 @@ https://ax23w4.itch.io/lightrays-2d-effect
 
 MAYBE>
 
-https://oco.itch.io/medieval-fantasy-character-pack
+
 https://rvros.itch.io/pixel-monsters-2
+https://cloudvortexgames.itch.io/metroid-vania-dark-fantasy-skeleton-pack
+https://opengameart.org/content/forgotten-dungeon
+https://opengameart.org/content/explosions-0

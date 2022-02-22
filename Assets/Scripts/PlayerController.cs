@@ -144,6 +144,28 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sent when another object enters a trigger collider attached to this
+    /// object (2D physics only).
+    /// </summary>
+    /// <param name="other">The other Collider2D involved in this collision.</param>
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if(Constants.TAG_ENEMY_SHOOT.Equals(other.gameObject.tag) &&
+            !animator.GetBool(Constants.ANIM_BOOL_HURT)){
+            if(other.gameObject.TryGetComponent<Shot>(out Shot e)){
+                currentLife -= e.attack;
+                if(currentLife <= 0)
+                    animator.SetBool(Constants.ANIM_BOOL_DIE, true);
+                else{
+                    animator.SetBool(Constants.ANIM_BOOL_HURT, true);
+                    rb.AddForce( new Vector2(other.transform.position.x > transform.position.x ? -5 : 5, 10), ForceMode2D.Impulse );
+                }
+                e.DisposeShot();
+            }
+        }
+    }
+
     private void SetAttackColliderState(int state){
         if(state == 1){
             if(spriteRenderer.flipX)

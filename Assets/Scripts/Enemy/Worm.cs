@@ -15,23 +15,20 @@ public class Worm : EnemyController
     private bool canAttack = false;
 
     [SerializeField]
-    private WormShoot shoot;
+    private Shot shot;
 
     public float attackTime =0;
 
     [SerializeField]
     private float rechargeAttackTime =0;
-    void Start()
-    {
+    
+
+    public override void StartSpecificClasses(){
         attackTime = Time.time;
-        rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
-        col = GetComponent<BoxCollider2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public override void ManageAttackRoutine(){
-        if(attackTime + rechargeAttackTime < Time.time && !shoot.gameObject.activeInHierarchy){
+        if(attackTime + rechargeAttackTime < Time.time && !shot.gameObject.activeInHierarchy){
             RaycastHit2D hit = Physics2D.Raycast(transform.position, spriteRenderer.flipX ? Vector2.left : Vector2.right, distanceCheckPlayer, layerMask);
             Debug.DrawRay(col.bounds.center + new Vector3(col.bounds.extents.x, 0), (spriteRenderer.flipX ? Vector2.left : Vector2.right) * distanceCheckPlayer, hit.collider != null ? Color.green : Color.red);
             if(hit.collider != null){
@@ -42,9 +39,9 @@ public class Worm : EnemyController
     }
 
     public void Shot(){
-        shoot.gameObject.SetActive(true);
-        shoot.orientation = spriteRenderer.flipX;
-        shoot.PrepareShoot();
+        shot.gameObject.SetActive(true);
+        shot.orientation = spriteRenderer.flipX;
+        shot.PrepareShot();
     }
 
     public override void ManageWalkRoutine(){

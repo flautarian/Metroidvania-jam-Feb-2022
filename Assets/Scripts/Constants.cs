@@ -14,10 +14,16 @@ public class Constants
     public const string ENEMY_ANIM_BOOL_ATTACK = "attack";
     public const string ANIM_BOOL_HURT = "hurt";
     public const string ANIM_BOOL_DIE = "die";
+    public const string ANIM_BOOL_RUN = "run";
+    public const string ANIM_BOOL_FLY = "fly";
     public const string PLAYER_ANIM_BOOL_FALL = "fall";
 
     public const string TAG_PLAYER_WEAPON = "PlayerWeapon";
 
+    public const string TAG_PLAYER = "Player";
+
     public const string TAG_ENEMY = "Enemy";
+
+    public const string TAG_ENEMY_SHOOT = "EnemyShot";
     
 }
