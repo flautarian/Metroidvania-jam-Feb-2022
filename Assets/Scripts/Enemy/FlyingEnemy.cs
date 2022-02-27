@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 public class FlyingEnemy : EnemyController
@@ -12,25 +10,30 @@ public class FlyingEnemy : EnemyController
 
     [SerializeField]
     private PlayerChecker playerChecker;
-
+    
+    [SerializeField]
     private AIPath aIPath;
-
+    
+    [SerializeField]
     private AIDestinationSetter aIDestination;
 
     private bool playerDetected = false;
 
-    Transform objective;
+    [SerializeField]
+    private Transform enemyTransform;
+
+    private Transform objective;
+
+
 
     public override void StartSpecificClasses(){
-        aIPath = GetComponent<AIPath>();
-        aIDestination = GetComponent<AIDestinationSetter>();
     }
 
     public override void ManageWalkRoutine() {
         if(mustPatrol){
             if(patrolPlaces.Length > 0){
-                transform.position = Vector2.MoveTowards(transform.position, patrolPlaces[patrolObjective], speed * Time.deltaTime);
-                if(Vector2.Distance(transform.position, patrolPlaces[patrolObjective]) < 0.2f){
+                enemyTransform.position = Vector2.MoveTowards(enemyTransform.position, patrolPlaces[patrolObjective], speed * Time.deltaTime);
+                if(Vector2.Distance(enemyTransform.position, patrolPlaces[patrolObjective]) < 0.2f){
                     patrolObjective += patrolOrientation;
                     if(patrolObjective == patrolPlaces.Length -1)
                         patrolOrientation = -1;
@@ -44,6 +47,7 @@ public class FlyingEnemy : EnemyController
             mustPatrol = false;
             aIDestination.target = playerChecker.playerDetected;
             aIPath.canMove = true;
+            transform.localScale = new Vector3(aIPath.desiredVelocity.x < 0.1f ? 1f : -1f, 1f, 1f);
         }
     }
 
@@ -52,16 +56,16 @@ public class FlyingEnemy : EnemyController
         
     }
 
-    public override void ManageHurtFromPLayer(Collider2D other)
+    public override void ManageHurtFromPlayer(Transform t)
     {
-        if(other.gameObject.tag.Equals(Constants.TAG_PLAYER_WEAPON) && !animator.GetBool(Constants.ANIM_BOOL_HURT)){
+        if(!animator.GetBool(Constants.ANIM_BOOL_HURT)){
             BeginHurt();
+            if(playerChecker.playerDetected == null)
+                playerChecker.playerDetected = t;
             if(alterable){
                 rb.velocity = Vector2.zero;
-                rb.AddForce(new Vector2(other.transform.position.x > transform.position.x ? -5 : 5, 10), ForceMode2D.Impulse);
+                rb.AddForce(new Vector2(t.position.x > transform.position.x ? -5 : 5, 10), ForceMode2D.Impulse);
             }
-            aIDestination.target = other.gameObject.transform;
-            aIPath.canMove = true;
         }
     }
 

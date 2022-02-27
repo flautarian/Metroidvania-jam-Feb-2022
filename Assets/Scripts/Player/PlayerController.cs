@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
     private float jumpTime;
     internal float jumpTimeCounter;
 
+    internal bool canDoubleJump = false, canDuckSlash = false, canBow = false;
+
     [SerializeField]
     private float slashForce;
     [SerializeField]
@@ -31,8 +33,6 @@ public class PlayerController : MonoBehaviour
     Animator animator;
     SpriteRenderer spriteRenderer;
     [SerializeField]
-    internal int maxLife;
-    [SerializeField]
     internal int currentLife;
 
     [SerializeField]
@@ -45,7 +45,10 @@ public class PlayerController : MonoBehaviour
         col = GetComponent<CapsuleCollider2D>();
         leftAttackCollider.enabled = false;
         rightAttackCollider.enabled = false;
-        currentLife = maxLife;
+        currentLife = GameManager.Instance.GetMaxLife();
+        canDoubleJump = GameManager.Instance.CanDoubleJump();
+        canDuckSlash = GameManager.Instance.CanDuckSlash();
+        canBow = GameManager.Instance.CanBow();
     }
 
     // Update is called once per frame
@@ -139,7 +142,7 @@ public class PlayerController : MonoBehaviour
                     animator.SetBool(Constants.ANIM_BOOL_HURT, true);
                     rb.AddForce( new Vector2(other.transform.position.x > transform.position.x ? -5 : 5, 10), ForceMode2D.Impulse );
                 }
-                
+                GameManager.Instance.RequestAndExecuteGameObject(Constants.PARTICLE_ENEMY_HIT, transform.position);
             }
         }
     }

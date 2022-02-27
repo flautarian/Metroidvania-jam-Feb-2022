@@ -48,10 +48,11 @@ public class Worm : EnemyController
         // soy un gusanico, ni ando ni pico :D
     }
 
-    public override void ManageHurtFromPLayer(Collider2D other)
+    public override void ManageHurtFromPlayer(Transform t)
     {
-        if(other.gameObject.tag.Equals(Constants.TAG_PLAYER_WEAPON) && !animator.GetBool(Constants.ANIM_BOOL_HURT)){
+        if(!animator.GetBool(Constants.ANIM_BOOL_HURT)){
             BeginHurt();
+            life -= GameManager.Instance.GetPlayerTotalAttack();
             //rb.AddForce(new Vector2(other.transform.position.x > transform.position.x ? -10 : 10, 0));
         }
     }

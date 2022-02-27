@@ -60,11 +60,15 @@ public class SaveGame : MonoBehaviour
         internal int[] flowers = new int[10]{0,0,0,0,0,0,0,0,0,0};
         internal bool doubleJumpUnlocked = false;
         internal bool duckSlashUnlocked = false;
-        internal bool scaleUnlocked = false; // TODO
         internal bool bowUnlocked = false; // TODO
         internal bool vialTime = false;
         internal bool vialLife = false;
         internal string language = "EN";
+        internal int attackBonus = 0;
+        internal int lifeBonus = 0;
+        internal int actualLife = 0;
+        internal int basicAttack = 5;
+        internal int arrows = 0;
         bool savedBool;
     }
 }

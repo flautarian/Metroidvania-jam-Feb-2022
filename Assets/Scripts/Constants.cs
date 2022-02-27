@@ -18,6 +18,8 @@ public class Constants
     public const string ANIM_BOOL_FLY = "fly";
     public const string PLAYER_ANIM_BOOL_FALL = "fall";
 
+    public const string PARTICLE_ENEMY_HIT = "EnemyHitParticle";
+
     public const string TAG_PLAYER_WEAPON = "PlayerWeapon";
 
     public const string TAG_PLAYER = "Player";

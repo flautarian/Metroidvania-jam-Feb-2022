@@ -6,9 +6,10 @@ public abstract class EnemyController : MonoBehaviour
 {
     internal Rigidbody2D rb;
 
+    [SerializeField]
     internal Animator animator;
     [SerializeField]
-    internal float speed;
+    internal float speed = 5f;
 
     [SerializeField]
     internal int attack =0;
@@ -29,7 +30,8 @@ public abstract class EnemyController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
+        if(animator is null)
+            animator = GetComponent<Animator>();
         col = GetComponent<BoxCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         StartSpecificClasses();
@@ -46,7 +48,7 @@ public abstract class EnemyController : MonoBehaviour
 
     public abstract void ManageWalkRoutine();
 
-    public abstract void ManageHurtFromPLayer(Collider2D other);
+    public abstract void ManageHurtFromPlayer(Transform t);
 
     internal void Attack(){
         animator.SetBool(Constants.ENEMY_ANIM_BOOL_ATTACK, true);
@@ -59,14 +61,10 @@ public abstract class EnemyController : MonoBehaviour
         animator.SetBool(Constants.ANIM_BOOL_HURT, true);
     }
 
-    /// <summary>
-    /// Sent when another object enters a trigger collider attached to this
-    /// object (2D physics only).
-    /// </summary>
-    /// <param name="other">The other Collider2D involved in this collision.</param>
     void OnTriggerEnter2D(Collider2D other)
     {
-        ManageHurtFromPLayer(other);
+        if(Constants.TAG_PLAYER_WEAPON.Equals(other.tag))
+            ManageHurtFromPlayer(other.transform.parent);
     }
 
 }

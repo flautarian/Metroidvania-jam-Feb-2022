@@ -7,6 +7,7 @@ TagManager:
   - Enemy
   - PlayerWeapon
   - EnemyShot
+  - SpecialGO/Particles
   layers:
   - Default
   - TransparentFX
@@ -55,4 +56,7 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 483907117
+    locked: 0
+  - name: FrontEffects
+    uniqueID: 1668187597
     locked: 0
