@@ -47,25 +47,31 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        public void RequestAndExecuteGameObject(string name, Vector3 position){
-            if(!GMPools.ContainsKey(name)){
-                //Debug.LogFormat("Creating pool for : {0}, actual Count {1}", name, GMPools.Count);
-                UnityEngine.Object PartObject = (UnityEngine.Object)Resources.Load("Particles/" + name);
-                if(PartObject != null){
-                    GameObjectsPool GmPool = new GameObjectsPool();
-                    GameObject prefab = (GameObject)GameObject.Instantiate(PartObject);
-                    prefab.transform.parent = particlesContainer.transform;
-                    prefab.SetActive(false);
-                    GmPool.prefab = prefab;
-                    GMPools.Add(name, GmPool);
-                    
+        public GameObject RequestAndExecuteGameObject(string nameAndPath, Vector3 position){
+            var names = nameAndPath.Split('/');
+            if(names.Length > 0){
+                var name = names[names.Length-1];
+                if(!GMPools.ContainsKey(name)){
+                    //Debug.LogFormat("Creating pool for : {0}, actual Count {1}", name, GMPools.Count);
+                    UnityEngine.Object PartObject = (UnityEngine.Object)Resources.Load(nameAndPath);
+                    if(PartObject != null){
+                        GameObjectsPool GmPool = new GameObjectsPool();
+                        GameObject prefab = (GameObject)GameObject.Instantiate(PartObject);
+                        prefab.transform.parent = particlesContainer.transform;
+                        prefab.SetActive(false);
+                        GmPool.prefab = prefab;
+                        GMPools.Add(name, GmPool);
+                        
+                    }
+                }
+                GameObject go = GMPools[name].Get();
+                if(go != null){
+                    go.SetActive(true);
+                    go.transform.position = position;
+                    return go;
                 }
             }
-            GameObject go = GMPools[name].Get();
-            if(go != null){
-                go.SetActive(true);
-                go.transform.position = position;
-            }
+            return null;
         }
     #endregion
 

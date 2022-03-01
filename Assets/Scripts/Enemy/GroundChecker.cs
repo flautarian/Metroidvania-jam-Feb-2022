@@ -7,6 +7,11 @@ public class GroundChecker : MonoBehaviour
     private BoxCollider2D boxCollider2D;
     [SerializeField]
     private LayerMask layerMask;
+
+    [SerializeField]
+    private LayerMask playerMask;
+    [SerializeField]
+    internal bool canDetectPlayer = false;
     void Start()
     {
         boxCollider2D = GetComponent<BoxCollider2D>();
@@ -19,5 +24,8 @@ public class GroundChecker : MonoBehaviour
 
     internal bool TouchesWall(){
         return boxCollider2D.IsTouchingLayers(layerMask);
+    }
+    internal bool TouchesPlayer(){
+        return boxCollider2D.IsTouchingLayers(playerMask);
     }
 }

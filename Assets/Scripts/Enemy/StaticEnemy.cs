@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Worm : EnemyController
+public class StaticEnemy : EnemyController
 {
     // Start is called before the first frame update
 
@@ -15,7 +15,7 @@ public class Worm : EnemyController
     private bool canAttack = false;
 
     [SerializeField]
-    private Shot shot;
+    private string shotPrefabNameAndPath;
 
     public float attackTime =0;
 
@@ -28,7 +28,7 @@ public class Worm : EnemyController
     }
 
     public override void ManageAttackRoutine(){
-        if(attackTime + rechargeAttackTime < Time.time && !shot.gameObject.activeInHierarchy){
+        if(attackTime + rechargeAttackTime < Time.time){
             RaycastHit2D hit = Physics2D.Raycast(transform.position, spriteRenderer.flipX ? Vector2.left : Vector2.right, distanceCheckPlayer, layerMask);
             Debug.DrawRay(col.bounds.center + new Vector3(col.bounds.extents.x, 0), (spriteRenderer.flipX ? Vector2.left : Vector2.right) * distanceCheckPlayer, hit.collider != null ? Color.green : Color.red);
             if(hit.collider != null){
@@ -39,12 +39,19 @@ public class Worm : EnemyController
     }
 
     public void Shot(){
-        shot.gameObject.SetActive(true);
-        shot.orientation = spriteRenderer.flipX;
-        shot.PrepareShot();
+        var shot = GameManager.Instance.RequestAndExecuteGameObject(shotPrefabNameAndPath, transform.position);
+        if(shot != null && shot.TryGetComponent<Shot>(out Shot s)){
+            s.orientation = transform.eulerAngles.y < 0;
+            s.PrepareShot();
+        }
     }
 
     public override void ManageWalkRoutine(){
+        // soy un gusanico, ni ando ni pico :D
+    }
+
+    public override void PathFollow()
+    {
         // soy un gusanico, ni ando ni pico :D
     }
 
@@ -53,7 +60,10 @@ public class Worm : EnemyController
         if(!animator.GetBool(Constants.ANIM_BOOL_HURT)){
             BeginHurt();
             life -= GameManager.Instance.GetPlayerTotalAttack();
-            //rb.AddForce(new Vector2(other.transform.position.x > transform.position.x ? -10 : 10, 0));
+            if(life <= 0){
+                life = 0;
+                BeginDead();
+            }
         }
     }
 }

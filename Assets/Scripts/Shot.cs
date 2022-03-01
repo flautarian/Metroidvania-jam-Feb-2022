@@ -35,7 +35,6 @@ public class Shot : MonoBehaviour
     }
 
     internal void DisposeShot(){
-        transform.position = initialPos;
-        this.gameObject.SetActive(false);
+        GameManager.Instance.ReturnToPool(gameObject.name, this.gameObject);
     }
 }

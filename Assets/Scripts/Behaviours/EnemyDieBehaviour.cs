@@ -19,8 +19,7 @@ public class EnemyDieBehaviour : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.SetBool(Constants.ANIM_BOOL_DIE, false); 
-        animator.gameObject.SetActive(false);  
+        animator.SetBool(Constants.ANIM_BOOL_DEAD, true);
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

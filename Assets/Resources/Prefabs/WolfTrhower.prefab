@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1844143219775297872}
   - component: {fileID: 3752202074894600648}
   m_Layer: 10
-  m_Name: Wolf
+  m_Name: WolfTrhower
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -129,19 +129,18 @@ MonoBehaviour:
   mustPatrol: 1
   alterable: 1
   groundChecker: {fileID: 8029460159462743247}
-  playerChecker: {fileID: 2346308991739015400}
+  followEnabled: 0
   enemyTransform: {fileID: 1121582266718616063}
-  target: {fileID: 0}
   activateDistance: 50
+  stayAndAttackDistance: 2
   pathUpdateSeconds: 0.25
   nextWaypointDistance: 3
   jumpNodeHeightRequirement: 0.9
   jumpNodeListMinRequirement: 10
   jumpModifier: 10
   jumpCheckOffset: 0.1
-  followEnabled: 0
-  jumpEnabled: 1
-  directionLookEnabled: 1
+  playerChecker: {fileID: 2346308991739015400}
+  minVectorPathsUntilAttack: 0
 --- !u!1 &6588944532576813833
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,6 +152,7 @@ GameObject:
   - component: {fileID: 1870772272861527405}
   - component: {fileID: 3868684139366496270}
   - component: {fileID: 2346308991739015400}
+  - component: {fileID: 1413579519}
   m_Layer: 10
   m_Name: PlayerChecker
   m_TagString: Untagged
@@ -189,7 +189,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 4.09
+  m_Radius: 4
 --- !u!114 &2346308991739015400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,6 +202,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87b0e7c77ac2e5947896475534dfd960, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!50 &1413579519
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6588944532576813833}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &7435339927898782498
 GameObject:
   m_ObjectHideFlags: 0
@@ -380,3 +401,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 256
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 512
+  canDetectPlayer: 0

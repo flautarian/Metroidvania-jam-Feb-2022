@@ -14,7 +14,6 @@ public class SaveGame : MonoBehaviour
     }
 
     private void Start() {
-        GlobalVariables.Instance.prepareSceneWithSaveGameParametters();
     }
 
     internal void UpdateSaveGame()
