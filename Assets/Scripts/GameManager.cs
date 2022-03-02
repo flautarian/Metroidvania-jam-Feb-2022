@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public enum GameState{
+        INGAME, OPTIONMENU, CINEMATICS
+    }
     private static GameManager _instance;
     
     public static GameManager Instance{
@@ -15,10 +18,16 @@ public class GameManager : MonoBehaviour
     }
     // savegame
     internal SaveGame saveGame;
+    [SerializeField]
+    internal GameState gameState;
 
     [SerializeField]
     // perticles container
     public Transform particlesContainer;
+
+    internal float musicLvl =0;
+
+    internal float chunkLvl =0; 
 
     public  Dictionary<string, GameObjectsPool> GMPools = new Dictionary<string, GameObjectsPool>();
 
@@ -30,12 +39,19 @@ public class GameManager : MonoBehaviour
             if(go != null)
                 particlesContainer = go.transform;
         }
+        if(saveGame.data != null){
+            musicLvl = saveGame.data.musicLvl;
+            chunkLvl = saveGame.data.chunkLvl;
+        }
             
     }
 
     public void SaveGame(){
-        if(saveGame != null)
+        if(saveGame != null){
+            saveGame.data.musicLvl = musicLvl;
+            saveGame.data.chunkLvl = chunkLvl;
             saveGame.UpdateSaveGame();
+        }
     }
 
     #region Pool GM Manager
@@ -106,6 +122,13 @@ public class GameManager : MonoBehaviour
 
     public void SetArrows(int newArrows){
         saveGame.data.arrows = newArrows;
+    }
+
+    public void SetChunkLvl(float value){
+        chunkLvl = value;
+    }
+    public void SetMusicLvl(float value){
+        musicLvl = value;
     }
 
     #endregion

@@ -68,6 +68,8 @@ public class SaveGame : MonoBehaviour
         internal int actualLife = 0;
         internal int basicAttack = 5;
         internal int arrows = 0;
+        internal float musicLvl = 0;
+        internal float chunkLvl = 0;
         bool savedBool;
     }
 }
