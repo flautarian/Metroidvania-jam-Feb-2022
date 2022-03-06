@@ -152,6 +152,7 @@ public class PlayerController : MonoBehaviour
     internal void HurtPlayer(int enemyAttack, Vector2 otherPosition){
         if(!animator.GetBool(Constants.ANIM_BOOL_HURT)){
             currentLife -= enemyAttack;
+            GameManager.Instance.SetActualLife(currentLife);
             if(currentLife <= 0)
                 animator.SetBool(Constants.ANIM_BOOL_DIE, true);
             else{

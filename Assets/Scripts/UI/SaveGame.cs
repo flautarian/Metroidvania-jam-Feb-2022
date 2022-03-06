@@ -65,7 +65,7 @@ public class SaveGame : MonoBehaviour
         internal string language = "EN";
         internal int attackBonus = 0;
         internal int lifeBonus = 0;
-        internal int actualLife = 0;
+        internal int actualLife = 50;
         internal int basicAttack = 5;
         internal int arrows = 0;
         internal float musicLvl = 0;

@@ -20,16 +20,14 @@ public class GameManager : MonoBehaviour
     internal SaveGame saveGame;
     [SerializeField]
     internal GameState gameState;
-
     [SerializeField]
     // perticles container
     public Transform particlesContainer;
-
     internal float musicLvl =0;
-
     internal float chunkLvl =0; 
-
     public  Dictionary<string, GameObjectsPool> GMPools = new Dictionary<string, GameObjectsPool>();
+    public delegate void HurtAction();
+    public static event HurtAction OnHurt;
 
     private void Awake() {
         _instance = this;
@@ -99,6 +97,12 @@ public class GameManager : MonoBehaviour
 
     public int GetMaxLife(){
         return 50 + (saveGame.data.lifeBonus * 10);
+    }
+
+    public void SetActualLife(int newLife){
+        saveGame.data.actualLife = newLife;
+        if(OnHurt != null)
+            OnHurt();
     }
 
     public int GetActualLife(){
