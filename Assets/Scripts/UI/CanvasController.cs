@@ -1,32 +1,55 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections;
+using UnityEngine.UI;
 using UnityEngine;
+using System;
 
 public class CanvasController : MonoBehaviour
 {
     Animator animator;
+    [SerializeField]
+    private Slider musicSlider, chunkSlider;
+
+    
     private void Start() {
         animator = GetComponent<Animator>();
-    }
-    private void Update() {
-        if( GameManager.GameState.INGAME.Equals(GameManager.Instance.gameState)){
-            if(Input.GetButtonDown("Submit")){
-                animator.SetTrigger("pause");
-            }
-        }
+        GameManager.OnChangeGameState += ChangeGameState;
     }
     public void ReturnToGame(){
-        if(GameManager.GameState.OPTIONMENU.Equals(GameManager.Instance.gameState)){
-            animator.SetTrigger("pause");
-        }
+        GameManager.Instance.ChangeState(GameManager.GameState.INGAME);
+    }
+    public void ReturnToPause(){
+        GameManager.Instance.ChangeState(GameManager.GameState.PAUSE);
+        GameManager.Instance.SaveGame();
     }
     public void GoToOptions(){
-        if( GameManager.GameState.OPTIONMENU.Equals(GameManager.Instance.gameState)){
-            animator.SetTrigger("options");
+        Debug.LogFormat("{0} music, {1} chunk ", GameManager.Instance.musicLvl, GameManager.Instance.chunkLvl);
+        if(GameManager.GameState.PAUSE.Equals(GameManager.Instance.gameState)){
+            if(musicSlider != null)
+                musicSlider.value = GameManager.Instance.musicLvl;
+            if(chunkSlider != null)
+                chunkSlider.value = GameManager.Instance.chunkLvl;
         }
+        GameManager.Instance.ChangeState(GameManager.GameState.OPTIONS);
     }
     public void ChangeGameState(GameManager.GameState newState){
-        GameManager.Instance.gameState = newState;
+        switch(newState){
+            case GameManager.GameState.CINEMATICS:
+                // TODO: this  
+            break;
+            case GameManager.GameState.DIALOGUE:
+                animator.SetTrigger("dialogue");
+            break;
+            case GameManager.GameState.INGAME:
+                animator.SetTrigger("ingame");
+            break;
+            case GameManager.GameState.PAUSE:
+                animator.SetTrigger("pause");
+            break;
+            case GameManager.GameState.OPTIONS:
+                animator.SetTrigger("options");
+            break;
+        }
     }
 
     public void ChangeTimeScale(float newScale){

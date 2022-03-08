@@ -171,6 +171,7 @@ MonoBehaviour:
   life: 20
   mustPatrol: 0
   alterable: 0
+  enemyType: 3
   groundChecker: {fileID: 0}
   followEnabled: 1
   enemyTransform: {fileID: 0}
@@ -182,10 +183,12 @@ MonoBehaviour:
   jumpNodeListMinRequirement: 5
   jumpModifier: 0.3
   jumpCheckOffset: 0.1
+  dropOptions: 
+  dropQuantity: 0
+  shotPrefabNameAndPath: Prefabs/WormShot
   distanceCheckPlayer: 5
   layerMask:
     serializedVersion: 2
     m_Bits: 512
-  shotPrefabNameAndPath: Prefabs/WormShot
   attackTime: 0
   rechargeAttackTime: 4

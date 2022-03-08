@@ -11,6 +11,7 @@ public class SaveGame : MonoBehaviour
 
     private void Awake() {
         data = LoadGameData();
+        GameManager.Instance.RefreshSaveGameCachedData();
     }
 
     private void Start() {
@@ -23,7 +24,7 @@ public class SaveGame : MonoBehaviour
                     + "/data.dat"); 
         bf.Serialize(file, data);
         file.Close();
-        //Debug.Log("Game data saved!");
+        Debug.Log("Game data saved!");
     }
 
     private SaveData LoadGameData()
@@ -43,7 +44,8 @@ public class SaveGame : MonoBehaviour
             Debug.LogError("There is no save data!, generating new dataFile");
         // if not exists we create a new saveGame from default values
         SaveData newSaveData = new SaveData();
-        Debug.Log("lang:" + newSaveData.language);
+        newSaveData.actualLife = 50 + (newSaveData.lifeBonus * 10);
+        // Debug.Log("lang:" + newSaveData.language);
         data = newSaveData;
         UpdateSaveGame();
         return newSaveData;
@@ -51,10 +53,6 @@ public class SaveGame : MonoBehaviour
 
     [Serializable]
     public class SaveData{
-        // volum de so de les opcions
-        //internal float soundValue = 75;
-        // volum de efectes de so de les opcions
-        // 
         internal int[] hearts = new int[10]{0,0,0,0,0,0,0,0,0,0};
         internal int[] flowers = new int[10]{0,0,0,0,0,0,0,0,0,0};
         internal bool doubleJumpUnlocked = false;
@@ -68,8 +66,8 @@ public class SaveGame : MonoBehaviour
         internal int actualLife = 50;
         internal int basicAttack = 5;
         internal int arrows = 0;
-        internal float musicLvl = 0;
-        internal float chunkLvl = 0;
+        internal float musicLvl = 1;
+        internal float chunkLvl = 0.75f;
         bool savedBool;
     }
 }

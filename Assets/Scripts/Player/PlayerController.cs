@@ -54,7 +54,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ManagePlayerMovement();
+        if(GameManager.Instance.IsIngame())
+            ManagePlayerMovement();
         ManageAnimations();
     }
 
@@ -72,6 +73,10 @@ public class PlayerController : MonoBehaviour
             ? Input.GetAxisRaw("Horizontal") 
             : 0f;
         vertical = Input.GetAxisRaw("Vertical");
+
+        if(Input.GetButtonDown("Submit"))
+            GameManager.Instance.ChangeState(GameManager.GameState.PAUSE);
+
         if(vertical >= 0f){
             // de pie
             if(Input.GetButtonDown("Jump") 
@@ -135,7 +140,6 @@ public class PlayerController : MonoBehaviour
         if(Constants.TAG_ENEMY.Equals(other.gameObject.tag)){
             if(other.gameObject.TryGetComponent<EnemyController>(out EnemyController e)){
                 HurtPlayer(e.attack, other.transform.position);
-                GameManager.Instance.RequestAndExecuteGameObject(Constants.PARTICLE_ENEMY_HIT, transform.position);
             }
         }
     }
@@ -151,6 +155,7 @@ public class PlayerController : MonoBehaviour
 
     internal void HurtPlayer(int enemyAttack, Vector2 otherPosition){
         if(!animator.GetBool(Constants.ANIM_BOOL_HURT)){
+            GameManager.Instance.RequestAndExecuteGameObject(Constants.PARTICLE_PLAYER_HIT, transform.position);
             currentLife -= enemyAttack;
             GameManager.Instance.SetActualLife(currentLife);
             if(currentLife <= 0)

@@ -5,6 +5,16 @@ using UnityEngine;
 
 public abstract class EnemyController : MonoBehaviour
 {
+
+    public enum EnemyTypes{
+        ENEMYTHROWTOTARGET,
+        ENEMYFOLLOWTARGET,
+        STATICTARGET,
+        STATICTHROWTARGET
+    }
+    public enum DropOption{
+        NOTHING, COIN, PLATECOIN, GOLDCOIN, MINIHEART, HEART, VIAL
+    }
     [Header("Basic Params")]
     internal Rigidbody2D rb;
 
@@ -24,12 +34,11 @@ public abstract class EnemyController : MonoBehaviour
 
     [SerializeField]
     internal bool alterable = false;
-
+    [SerializeField]
+    internal EnemyTypes enemyType = EnemyTypes.STATICTARGET;
     internal BoxCollider2D col;
-    
     [SerializeField]
     internal GroundChecker groundChecker;
-
     internal SpriteRenderer spriteRenderer;
 
     [Header("IA Behavior")]
@@ -65,12 +74,21 @@ public abstract class EnemyController : MonoBehaviour
 
     [SerializeField]
     internal float jumpCheckOffset = 0.1f;
+
+    [SerializeField]
+    internal DropOption[] dropOptions;
+    
+    [SerializeField]
+    internal int dropQuantity;
     
     [Header("Other")]
     internal Path path;
     internal int currentWaypoint = 0;
     internal bool jumpEnabled = false;
     internal bool directionLookEnabled = true;
+    
+    [SerializeField]
+    internal string shotPrefabNameAndPath;
 
     void Start()
     {
@@ -106,8 +124,26 @@ public abstract class EnemyController : MonoBehaviour
         animator.SetBool(Constants.ANIM_BOOL_DIE, true);
     }
 
+    public void Shot(){
+        if(EnemyTypes.ENEMYTHROWTOTARGET.Equals(enemyType) ||
+            EnemyTypes.STATICTHROWTARGET.Equals(enemyType)){
+            var shot = GameManager.Instance.RequestAndExecuteGameObject(shotPrefabNameAndPath, transform.position);
+            if(shot != null && shot.TryGetComponent<Shot>(out Shot s)){
+                s.orientation = transform.eulerAngles.y != 0;
+                s.PrepareShot();
+            }
+        }
+    }
+
+    private void OnDisable() {
+        // TODO: esto aqui produce un fallo, estudiar poner en otra funcion
+        GameManager.Instance.RequestAndExecuteGameObject(Constants.PARTICLE_ENEMY_DIE, transform.position);
+        //TODO: instantiate item drop here!
+    }
+
     internal void BeginHurt(){
         animator.SetBool(Constants.ANIM_BOOL_HURT, true);
+        GameManager.Instance.RequestAndExecuteGameObject(Constants.PARTICLE_PLAYER_HIT, transform.position);
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
@@ -156,7 +192,7 @@ public abstract class EnemyController : MonoBehaviour
     internal bool CanMoveToTarget(){
         return !animator.GetBool(Constants.ANIM_BOOL_HURT) 
             && !animator.GetBool(Constants.ENEMY_ANIM_BOOL_ATTACK) 
-            && !EnemyIsCloserToTarget();
+            && (mustPatrol || !EnemyIsCloserToTarget());
     }
 
 }

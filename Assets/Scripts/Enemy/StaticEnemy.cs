@@ -14,9 +14,6 @@ public class StaticEnemy : EnemyController
 
     private bool canAttack = false;
 
-    [SerializeField]
-    private string shotPrefabNameAndPath;
-
     public float attackTime =0;
 
     [SerializeField]
@@ -29,20 +26,12 @@ public class StaticEnemy : EnemyController
 
     public override void ManageAttackRoutine(){
         if(attackTime + rechargeAttackTime < Time.time){
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, spriteRenderer.flipX ? Vector2.left : Vector2.right, distanceCheckPlayer, layerMask);
-            Debug.DrawRay(col.bounds.center + new Vector3(col.bounds.extents.x, 0), (spriteRenderer.flipX ? Vector2.left : Vector2.right) * distanceCheckPlayer, hit.collider != null ? Color.green : Color.red);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.eulerAngles.y != 0 ? Vector2.left : Vector2.right, distanceCheckPlayer, layerMask);
+            Debug.DrawRay(col.bounds.center + new Vector3(col.bounds.extents.x, 0), (transform.eulerAngles.y != 0 ? Vector2.left : Vector2.right) * distanceCheckPlayer, hit.collider != null ? Color.green : Color.red);
             if(hit.collider != null){
                 Attack();
                 attackTime = Time.time;
             }
-        }
-    }
-
-    public void Shot(){
-        var shot = GameManager.Instance.RequestAndExecuteGameObject(shotPrefabNameAndPath, transform.position);
-        if(shot != null && shot.TryGetComponent<Shot>(out Shot s)){
-            s.orientation = transform.eulerAngles.y < 0;
-            s.PrepareShot();
         }
     }
 

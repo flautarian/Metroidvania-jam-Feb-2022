@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class GameManager : MonoBehaviour
 {
     public enum GameState{
-        INGAME, OPTIONMENU, CINEMATICS
+        INGAME, PAUSE, OPTIONS, CINEMATICS, DIALOGUE
     }
     private static GameManager _instance;
     
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
     public  Dictionary<string, GameObjectsPool> GMPools = new Dictionary<string, GameObjectsPool>();
     public delegate void HurtAction();
     public static event HurtAction OnHurt;
+    public static event Action<GameState> OnChangeGameState = delegate { };
 
     private void Awake() {
         _instance = this;
@@ -37,11 +39,11 @@ public class GameManager : MonoBehaviour
             if(go != null)
                 particlesContainer = go.transform;
         }
-        if(saveGame.data != null){
-            musicLvl = saveGame.data.musicLvl;
-            chunkLvl = saveGame.data.chunkLvl;
-        }
-            
+    }
+
+    public void RefreshSaveGameCachedData(){
+        musicLvl = saveGame.data.musicLvl;
+        chunkLvl = saveGame.data.chunkLvl;
     }
 
     public void SaveGame(){
@@ -92,7 +94,7 @@ public class GameManager : MonoBehaviour
     #region Player property Getters
 
     public int GetPlayerTotalAttack(){
-        return Random.Range(saveGame.data.basicAttack, saveGame.data.basicAttack + saveGame.data.attackBonus);
+        return UnityEngine.Random.Range(saveGame.data.basicAttack, saveGame.data.basicAttack + saveGame.data.attackBonus);
     }
 
     public int GetMaxLife(){
@@ -134,6 +136,23 @@ public class GameManager : MonoBehaviour
     public void SetMusicLvl(float value){
         musicLvl = value;
     }
+    #endregion
 
+    #region GameStates consultor
+    public bool IsIngame(){
+        return GameState.INGAME.Equals(gameState);
+    }
+
+    public bool IsInCinematics(){
+        return GameState.CINEMATICS.Equals(gameState);
+    }
+
+    public bool IsInMenu(){
+        return GameState.PAUSE.Equals(gameState);
+    }
+    public void ChangeState(GameState newState){
+        gameState = newState;
+        OnChangeGameState(newState);
+    }
     #endregion
 }

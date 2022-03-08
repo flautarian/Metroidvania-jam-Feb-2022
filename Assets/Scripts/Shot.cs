@@ -12,6 +12,9 @@ public class Shot : MonoBehaviour
 
     [SerializeField]
     internal int attack;
+
+    [SerializeField]
+    internal int velocity = 7;
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     internal Vector2 initialPos = Vector2.zero;
@@ -22,7 +25,7 @@ public class Shot : MonoBehaviour
             rb = GetComponent<Rigidbody2D>();
         if(spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
-        rb.velocity = new Vector2(7 * (!orientation ? 1 : -1), 0);   
+        rb.velocity = new Vector2(velocity * (!orientation ? 1 : -1), 0);   
         time = timeAlive;
     }
 

@@ -5,20 +5,12 @@ using Pathfinding;
 
 public class NormalEnemy : EnemyController
 {
-
-    public enum EnemyTypes{
-        ENEMYTHROWTOTARGET,
-        ENEMYFOLLOWTARGET
-    }
-
     [Header("Enemy parameters")]
 
     [SerializeField]
     private PlayerChecker playerChecker;
-    private bool goRight = true;
+    public  bool goRight = true;
     private bool playerDetected = false;
-    [SerializeField]
-    private EnemyTypes enemyType = EnemyTypes.ENEMYFOLLOWTARGET;
     private RaycastHit2D isGrounded;
     private Collider2D colliderObject;
 
@@ -27,23 +19,22 @@ public class NormalEnemy : EnemyController
     public override void StartSpecificClasses(){
         seeker = GetComponent<Seeker>();
         colliderObject = GetComponent<Collider2D>();
+        if(playerChecker != null && EnemyTypes.ENEMYTHROWTOTARGET.Equals(enemyType))
+            playerChecker.canUnFollow = true;
     }
     public override void ManageWalkRoutine() {
-        if(mustPatrol){
-            //if(playerChecker.playerDetected != null)
-            //    playerChecker.playerDetected = null;
-            // PATROL
+        if(mustPatrol && playerChecker.playerDetected is null){
             animator.SetBool(Constants.ANIM_BOOL_RUN, true);
             if(!groundChecker.TouchesGround()){
-                enemyTransform.eulerAngles = new Vector3(0, goRight ? -180 : 0, 0);
                 goRight = !goRight;
+                enemyTransform.eulerAngles = new Vector3(0, goRight ? 0 : -180, 0);
             }
-            if(!animator.GetBool(Constants.ANIM_BOOL_HURT)){
+            if(CanMoveToTarget()){
                 enemyTransform.position = new Vector2( enemyTransform.position.x + ((goRight ? 1 : -1) * speed * Time.deltaTime) , enemyTransform.transform.position.y);
                 rb.velocity = Vector2.zero;
             }
         }
-        if(playerChecker.playerDetected != null){
+        else if(playerChecker.playerDetected != null){
             // AI
             if(mustPatrol)
                 InvokeRepeating("UpdatePath", 0f, pathUpdateSeconds);
@@ -59,9 +50,18 @@ public class NormalEnemy : EnemyController
                 break;
                 case EnemyTypes.ENEMYTHROWTOTARGET:
                     if(!animator.GetBool(Constants.ENEMY_ANIM_BOOL_ATTACK))
-                    animator.SetBool(Constants.ENEMY_ANIM_BOOL_ATTACK, true);
+                    {
+                        rb.velocity = Vector2.zero;
+                        enemyTransform.eulerAngles = new Vector3(0, target.position.x < transform.position.x ? -180 : 0, 0);
+                        animator.SetBool(Constants.ENEMY_ANIM_BOOL_ATTACK, true);
+                    }
                 break;
             }
+        }
+        else {
+            enemyTransform.eulerAngles = new Vector3(0, goRight ? 0 : -180, 0);
+            mustPatrol = true;
+            CancelInvoke();
         }
     }
 

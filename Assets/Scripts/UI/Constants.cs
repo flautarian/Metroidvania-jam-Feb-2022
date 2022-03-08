@@ -20,6 +20,8 @@ public class Constants
     public const string PLAYER_ANIM_BOOL_FALL = "fall";
 
     public const string PARTICLE_ENEMY_HIT = "Particles/EnemyHitParticle";
+    public const string PARTICLE_ENEMY_DIE = "Particles/EnemyDieParticle";
+    public const string PARTICLE_PLAYER_HIT = "Particles/PlayerHitParticle";
 
     public const string TAG_PLAYER_WEAPON = "PlayerWeapon";
 
