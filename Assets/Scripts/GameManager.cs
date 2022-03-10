@@ -2,48 +2,63 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public enum GameState{
-        INGAME, PAUSE, OPTIONS, CINEMATICS, DIALOGUE
+        INGAME, PAUSE, OPTIONS, CINEMATICS, DIALOGUE, CHANGESCENE
     }
-    private static GameManager _instance;
-    
-    public static GameManager Instance{
-        get{
-            if(_instance is null)
-                Debug.LogError("Game Manager is NULL");
-                return _instance;
-        }
-    }
+    public static GameManager Instance { get; private set; }
     // savegame
     internal SaveGame saveGame;
     [SerializeField]
-    internal GameState gameState;
+    public GameState gameState;
     [SerializeField]
     // perticles container
     public Transform particlesContainer;
     internal float musicLvl =0;
     internal float chunkLvl =0; 
+    internal int maxLife =1; 
+    internal int actualLife =1;
+    internal int actualCoins =0; 
     public  Dictionary<string, GameObjectsPool> GMPools = new Dictionary<string, GameObjectsPool>();
     public delegate void HurtAction();
     public static event HurtAction OnHurt;
     public static event Action<GameState> OnChangeGameState = delegate { };
-
+    public static event Action<int> OnGainCoins = delegate { };
+    private string nextScene = string.Empty;
+    public Vector2 nextPlayerPosition = Vector2.zero;
     private void Awake() {
-        _instance = this;
-        saveGame = GetComponent<SaveGame>();
-        if(particlesContainer is null){
-            var go = GameObject.FindGameObjectWithTag("SpecialGO/Particles");
-            if(go != null)
-                particlesContainer = go.transform;
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
+    public void SaveDataRefresh(SaveGame save){
+        saveGame = save;
+        if(saveGame != null){
+            //saveGame.data.actualScene = nextScene;
+            //saveGame.data.playerLocation = nextPlayerPosition;
+            RefreshSaveGameCachedData();
         }
     }
 
     public void RefreshSaveGameCachedData(){
         musicLvl = saveGame.data.musicLvl;
         chunkLvl = saveGame.data.chunkLvl;
+        maxLife = 50 + saveGame.data.lifeBonus * 10;
+        actualLife = saveGame.data.actualLife;
+        actualCoins = saveGame.data.coins;
+        OnGainCoins(actualCoins);
+        OnHurt();
     }
 
     public void SaveGame(){
@@ -52,6 +67,23 @@ public class GameManager : MonoBehaviour
             saveGame.data.chunkLvl = chunkLvl;
             saveGame.UpdateSaveGame();
         }
+    }
+
+    public void ChangeScene(string nextScn, Vector2 nextPlayerPos){
+        GMPools.Clear();
+        nextScene = nextScn;
+        nextPlayerPosition = nextPlayerPos;
+        saveGame.data.actualScene = nextScene;
+        saveGame.data.playerLocationX = nextPlayerPos.x;
+        saveGame.data.playerLocationY = nextPlayerPos.y;
+        gameState = GameState.CHANGESCENE;
+        OnChangeGameState(gameState);
+        StartCoroutine(WaitAndChangeScene());
+    }
+
+    private IEnumerator WaitAndChangeScene(){
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene(nextScene);
     }
 
     #region Pool GM Manager
@@ -64,6 +96,12 @@ public class GameManager : MonoBehaviour
         }
 
         public GameObject RequestAndExecuteGameObject(string nameAndPath, Vector3 position){
+            if(particlesContainer == null){
+                Debug.Log("Starting new particle relation");
+                var go = GameObject.FindGameObjectWithTag("SpecialGO/Particles");
+                if(go != null)
+                particlesContainer = go.transform;
+            }
             var names = nameAndPath.Split('/');
             if(names.Length > 0){
                 var name = names[names.Length-1];
@@ -72,6 +110,7 @@ public class GameManager : MonoBehaviour
                     UnityEngine.Object PartObject = (UnityEngine.Object)Resources.Load(nameAndPath);
                     if(PartObject != null){
                         GameObjectsPool GmPool = new GameObjectsPool();
+                        GmPool.objects = new Queue<GameObject>();
                         GameObject prefab = (GameObject)GameObject.Instantiate(PartObject);
                         prefab.transform.parent = particlesContainer.transform;
                         prefab.SetActive(false);
@@ -98,17 +137,30 @@ public class GameManager : MonoBehaviour
     }
 
     public int GetMaxLife(){
-        return 50 + (saveGame.data.lifeBonus * 10);
+        return maxLife;
     }
 
-    public void SetActualLife(int newLife){
-        saveGame.data.actualLife = newLife;
-        if(OnHurt != null)
-            OnHurt();
+    public int GetCoins(){
+        return actualCoins;
+    }
+
+    public bool UpdateCoins(int otherCoins){
+        Debug.Log("COINS!");
+        if(otherCoins < 0 && Math.Abs(otherCoins) > actualCoins)
+            return false;
+        actualCoins = (actualCoins + otherCoins > 9999 ? 9999 : actualCoins + otherCoins);
+        OnGainCoins(actualCoins);
+        return true;
+    }
+
+    public bool ModifyLife(int alterLife){
+        actualLife = (actualLife + alterLife >= GetMaxLife() ?  GetMaxLife() : actualLife + alterLife);
+        OnHurt();
+        return actualLife > 0;
     }
 
     public int GetActualLife(){
-        return saveGame.data.actualLife;
+        return actualLife;
     }
     public bool CanDoubleJump(){
         return saveGame.data.doubleJumpUnlocked;
@@ -116,18 +168,6 @@ public class GameManager : MonoBehaviour
 
     public bool CanDuckSlash(){
         return saveGame.data.duckSlashUnlocked;
-    }
-
-    public bool CanBow(){
-        return saveGame.data.bowUnlocked;
-    }
-
-    public int GetArrows(){
-        return saveGame.data.arrows;
-    }
-
-    public void SetArrows(int newArrows){
-        saveGame.data.arrows = newArrows;
     }
 
     public void SetChunkLvl(float value){

@@ -22,13 +22,22 @@ public class Constants
     public const string PARTICLE_ENEMY_HIT = "Particles/EnemyHitParticle";
     public const string PARTICLE_ENEMY_DIE = "Particles/EnemyDieParticle";
     public const string PARTICLE_PLAYER_HIT = "Particles/PlayerHitParticle";
+    public const string PARTICLE_PLAYER_TAKES_LIFE = "Particles/PlayerTakeLifeParticle";
+    public const string PARTICLE_CAST_SHOT = "Particles/CastNormalShotParticle";
 
+    public const string PREFAB_HEARTH = "Prefabs/Items/Hearth";
+    public const string PREFAB_MINI_HEARTH = "Prefabs/Items/MiniHearth";
+    public const string PREFAB_GOLD_COIN = "Prefabs/Items/GoldCoin";
+    public const string PREFAB_PLATE_COIN = "Prefabs/Items/PlateCoin";
+    public const string PREFAB_BRONZE_COIN = "Prefabs/Items/BronzeCoin";
     public const string TAG_PLAYER_WEAPON = "PlayerWeapon";
-
     public const string TAG_PLAYER = "Player";
-
     public const string TAG_ENEMY = "Enemy";
+    public const string TAG_MINI_HEARTH = "SpecialGO/Objects/MiniHearth";
+    public const string TAG_HEARTH = "SpecialGO/Objects/Hearth";
+    public const string TAG_GOLD_COIN = "SpecialGO/Objects/GoldCoin";
+    public const string TAG_PLATE_COIN = "SpecialGO/Objects/PlateCoin";
+    public const string TAG_BRONZE_COIN = "SpecialGO/Objects/BronzeCoin";
 
     public const string TAG_ENEMY_SHOOT = "EnemyShot";
-    
 }

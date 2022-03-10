@@ -8,6 +8,13 @@ TagManager:
   - PlayerWeapon
   - EnemyShot
   - SpecialGO/Particles
+  - SpecialGO/Objects/MiniHearth
+  - SpecialGO/Objects
+  - SpecialGO/Objects/GoldCoin
+  - SpecialGO/Objects/Hearth
+  - SpecialGO/Objects/PlateCoin
+  - SpecialGO/Objects/Flower
+  - SpecialGO/Objects/BronzeCoin
   layers:
   - Default
   - TransparentFX
@@ -21,7 +28,7 @@ TagManager:
   - Player
   - Enemies
   - PlayerWeapon
-  - 
+  - Objects
   - 
   - 
   - 

@@ -128,6 +128,7 @@ MonoBehaviour:
   life: 15
   mustPatrol: 1
   alterable: 1
+  enemyType: 2
   groundChecker: {fileID: 3837362454859103289}
   followEnabled: 1
   enemyTransform: {fileID: 490129186977057477}
@@ -139,6 +140,9 @@ MonoBehaviour:
   jumpNodeListMinRequirement: 5
   jumpModifier: 0.3
   jumpCheckOffset: 0.1
+  dropOptions: 0000000002000000020000000200000003000000
+  dropQuantity: 2
+  shotPrefabNameAndPath: 
   patrolObjective: 0
   patrolOrientation: 1
   patrolPlaces:
@@ -285,6 +289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87b0e7c77ac2e5947896475534dfd960, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canUnFollow: 0
 --- !u!50 &1530726956
 Rigidbody2D:
   serializedVersion: 4

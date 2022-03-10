@@ -10,7 +10,6 @@ public class HealthBarController : BarController
 
     public override void PostStart(){
         GameManager.OnHurt += ValueChanged;
-        ValueChanged();
     }
 
     private void OnDestroy() {

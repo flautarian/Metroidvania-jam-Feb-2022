@@ -38,6 +38,7 @@ public class Shot : MonoBehaviour
     }
 
     internal void DisposeShot(){
+        GameManager.Instance.RequestAndExecuteGameObject(Constants.PARTICLE_CAST_SHOT, transform.position);
         GameManager.Instance.ReturnToPool(gameObject.name, this.gameObject);
     }
 }

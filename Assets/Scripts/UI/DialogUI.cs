@@ -16,6 +16,10 @@ public class DialogUI : MonoBehaviour
         SignController.OnOpenDialogue += ShowDialogue;
     }
 
+    private void OnDestroy() {
+        SignController.OnOpenDialogue -= ShowDialogue;        
+    }
+
     public void ShowDialogue(DialogObject dialogObject){
         if(!dialogueOccupied){
             GameManager.Instance.ChangeState(GameManager.GameState.DIALOGUE);
@@ -25,11 +29,13 @@ public class DialogUI : MonoBehaviour
 
     private IEnumerator ShowDialogeStep(DialogObject dialogObject){
         dialogueOccupied = true;
-        textPanel.text = "";
+        textPanel.text = string.Empty;
         yield return new WaitForSeconds(1);
         foreach(string dialogue in dialogObject.Dialoge){
             yield return typeWriterEffect.Run(dialogue, textPanel);
-            yield return new WaitUntil(() => Input.GetButton("Fire1"));
+            yield return new WaitUntil(() => Input.GetButton("Fire1") || Input.GetAxisRaw("Horizontal") != 0);
+            if(Input.GetAxisRaw("Horizontal") != 0)
+                break;
         }
         GameManager.Instance.ChangeState(GameManager.GameState.INGAME);
         yield return new WaitForSeconds(3);

@@ -140,8 +140,8 @@ MonoBehaviour:
   jumpNodeListMinRequirement: 10
   jumpModifier: 10
   jumpCheckOffset: 0.1
-  dropOptions: 
-  dropQuantity: 0
+  dropOptions: 020000000000000000000000
+  dropQuantity: 3
   shotPrefabNameAndPath: Prefabs/WolfShot
   playerChecker: {fileID: 2346308991739015400}
   goRight: 1

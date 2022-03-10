@@ -183,8 +183,8 @@ MonoBehaviour:
   jumpNodeListMinRequirement: 5
   jumpModifier: 0.3
   jumpCheckOffset: 0.1
-  dropOptions: 
-  dropQuantity: 0
+  dropOptions: 020000000400000001000000
+  dropQuantity: 3
   shotPrefabNameAndPath: Prefabs/WormShot
   distanceCheckPlayer: 5
   layerMask:

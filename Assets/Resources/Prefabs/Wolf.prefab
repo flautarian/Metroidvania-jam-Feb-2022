@@ -140,8 +140,8 @@ MonoBehaviour:
   jumpNodeListMinRequirement: 10
   jumpModifier: 10
   jumpCheckOffset: 0.1
-  dropOptions: 0000000001000000010000000000000006000000
-  dropQuantity: 2
+  dropOptions: 000000000000000001000000010000000400000002000000
+  dropQuantity: 3
   shotPrefabNameAndPath: 
   playerChecker: {fileID: 2346308991739015400}
   goRight: 1

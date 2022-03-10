@@ -15,6 +15,10 @@ public class CanvasController : MonoBehaviour
         animator = GetComponent<Animator>();
         GameManager.OnChangeGameState += ChangeGameState;
     }
+
+    private void OnDestroy() {
+        GameManager.OnChangeGameState -= ChangeGameState;
+    }
     public void ReturnToGame(){
         GameManager.Instance.ChangeState(GameManager.GameState.INGAME);
     }
@@ -48,6 +52,9 @@ public class CanvasController : MonoBehaviour
             break;
             case GameManager.GameState.OPTIONS:
                 animator.SetTrigger("options");
+            break;
+            case GameManager.GameState.CHANGESCENE:
+                animator.SetTrigger("changeScene");
             break;
         }
     }

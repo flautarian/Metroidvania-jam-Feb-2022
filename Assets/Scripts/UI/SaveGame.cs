@@ -11,10 +11,10 @@ public class SaveGame : MonoBehaviour
 
     private void Awake() {
         data = LoadGameData();
-        GameManager.Instance.RefreshSaveGameCachedData();
     }
 
     private void Start() {
+        GameManager.Instance.SaveDataRefresh(this);
     }
 
     internal void UpdateSaveGame()
@@ -57,7 +57,9 @@ public class SaveGame : MonoBehaviour
         internal int[] flowers = new int[10]{0,0,0,0,0,0,0,0,0,0};
         internal bool doubleJumpUnlocked = false;
         internal bool duckSlashUnlocked = false;
-        internal bool bowUnlocked = false; // TODO
+        internal string actualScene = string.Empty;
+        internal float playerLocationX = 0;
+        internal float playerLocationY = 0;
         internal bool vialTime = false;
         internal bool vialLife = false;
         internal string language = "EN";
@@ -65,9 +67,9 @@ public class SaveGame : MonoBehaviour
         internal int lifeBonus = 0;
         internal int actualLife = 50;
         internal int basicAttack = 5;
-        internal int arrows = 0;
         internal float musicLvl = 1;
         internal float chunkLvl = 0.75f;
+        internal int coins =0;
         bool savedBool;
     }
 }

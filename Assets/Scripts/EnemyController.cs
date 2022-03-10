@@ -13,7 +13,7 @@ public abstract class EnemyController : MonoBehaviour
         STATICTHROWTARGET
     }
     public enum DropOption{
-        NOTHING, COIN, PLATECOIN, GOLDCOIN, MINIHEART, HEART, VIAL
+        NOTHING, BRONZECOIN, PLATECOIN, GOLDCOIN, MINIHEART, HEART, VIAL
     }
     [Header("Basic Params")]
     internal Rigidbody2D rb;
@@ -127,6 +127,7 @@ public abstract class EnemyController : MonoBehaviour
     public void Shot(){
         if(EnemyTypes.ENEMYTHROWTOTARGET.Equals(enemyType) ||
             EnemyTypes.STATICTHROWTARGET.Equals(enemyType)){
+            GameManager.Instance.RequestAndExecuteGameObject(Constants.PARTICLE_CAST_SHOT, transform.position);
             var shot = GameManager.Instance.RequestAndExecuteGameObject(shotPrefabNameAndPath, transform.position);
             if(shot != null && shot.TryGetComponent<Shot>(out Shot s)){
                 s.orientation = transform.eulerAngles.y != 0;
@@ -137,8 +138,42 @@ public abstract class EnemyController : MonoBehaviour
 
     private void OnDisable() {
         // TODO: esto aqui produce un fallo, estudiar poner en otra funcion
-        GameManager.Instance.RequestAndExecuteGameObject(Constants.PARTICLE_ENEMY_DIE, transform.position);
+        if(life <= 0){
+            GameManager.Instance.RequestAndExecuteGameObject(Constants.PARTICLE_ENEMY_DIE, transform.position);
+            InstantiateItemDrop();
+        }
         //TODO: instantiate item drop here!
+    }
+
+    private void InstantiateItemDrop(){
+        for(int i =0; i < dropQuantity; i++){
+            GenerateRandomItemDrop();
+        }
+    }
+
+    private void GenerateRandomItemDrop(){
+        int result = Random.Range(0, dropOptions.Length-1);
+        switch(dropOptions[result]){
+            case DropOption.NOTHING:
+            break;
+            case DropOption.HEART:
+                GameManager.Instance.RequestAndExecuteGameObject(Constants.PREFAB_HEARTH, transform.position);
+            break;
+            case DropOption.MINIHEART:
+                GameManager.Instance.RequestAndExecuteGameObject(Constants.PREFAB_MINI_HEARTH, transform.position);
+            break;
+            case DropOption.GOLDCOIN:
+                GameManager.Instance.RequestAndExecuteGameObject(Constants.PREFAB_PLATE_COIN, transform.position);
+            break;
+            case DropOption.PLATECOIN:
+                GameManager.Instance.RequestAndExecuteGameObject(Constants.PREFAB_PLATE_COIN, transform.position);
+            break;
+            case DropOption.BRONZECOIN:
+                GameManager.Instance.RequestAndExecuteGameObject(Constants.PREFAB_BRONZE_COIN, transform.position);
+            break;
+            case DropOption.VIAL:
+            break;
+        }
     }
 
     internal void BeginHurt(){
