@@ -57,32 +57,39 @@ public class GameManager : MonoBehaviour
         maxLife = 50 + saveGame.data.lifeBonus * 10;
         actualLife = saveGame.data.actualLife;
         actualCoins = saveGame.data.coins;
-        OnGainCoins(actualCoins);
-        OnHurt();
+        if(OnGainCoins != null)
+            OnGainCoins(actualCoins);
+        if(OnHurt != null)
+            OnHurt();
     }
 
     public void SaveGame(){
         if(saveGame != null){
             saveGame.data.musicLvl = musicLvl;
             saveGame.data.chunkLvl = chunkLvl;
+            saveGame.data.actualLife = actualLife;
+            saveGame.data.coins = actualCoins;
+            saveGame.data.savedBool = true;
             saveGame.UpdateSaveGame();
         }
     }
 
     public void ChangeScene(string nextScn, Vector2 nextPlayerPos){
-        GMPools.Clear();
+        if(GMPools != null)
+            GMPools.Clear();
         nextScene = nextScn;
-        nextPlayerPosition = nextPlayerPos;
-        saveGame.data.actualScene = nextScene;
-        saveGame.data.playerLocationX = nextPlayerPos.x;
-        saveGame.data.playerLocationY = nextPlayerPos.y;
+        if(!nextScn.Equals("Main Menu")){
+            nextPlayerPosition = nextPlayerPos;
+            saveGame.data.actualScene = nextScene;
+            saveGame.data.playerLocationX = nextPlayerPos.x;
+            saveGame.data.playerLocationY = nextPlayerPos.y;
+        }
         gameState = GameState.CHANGESCENE;
         OnChangeGameState(gameState);
-        StartCoroutine(WaitAndChangeScene());
     }
 
-    private IEnumerator WaitAndChangeScene(){
-        yield return new WaitForSeconds(1);
+    public void LoadScene(){
+        Debug.Log(nextScene);
         SceneManager.LoadScene(nextScene);
     }
 
@@ -140,12 +147,15 @@ public class GameManager : MonoBehaviour
         return maxLife;
     }
 
+    public bool HasNewGame(){
+        return saveGame != null && !saveGame.data.savedBool;
+    }
+
     public int GetCoins(){
         return actualCoins;
     }
 
     public bool UpdateCoins(int otherCoins){
-        Debug.Log("COINS!");
         if(otherCoins < 0 && Math.Abs(otherCoins) > actualCoins)
             return false;
         actualCoins = (actualCoins + otherCoins > 9999 ? 9999 : actualCoins + otherCoins);

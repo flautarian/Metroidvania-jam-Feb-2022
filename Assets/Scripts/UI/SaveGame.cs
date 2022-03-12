@@ -70,6 +70,6 @@ public class SaveGame : MonoBehaviour
         internal float musicLvl = 1;
         internal float chunkLvl = 0.75f;
         internal int coins =0;
-        bool savedBool;
+        internal bool savedBool = false;
     }
 }

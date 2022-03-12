@@ -26,6 +26,18 @@ public class CanvasController : MonoBehaviour
         GameManager.Instance.ChangeState(GameManager.GameState.PAUSE);
         GameManager.Instance.SaveGame();
     }
+
+    public void SaveGoMainMenu(){
+        animator.SetTrigger("changeScene");
+        GameManager.Instance.SaveGame();
+        StartCoroutine(GoToMainMenuCoroutine());
+    }
+
+    private IEnumerator GoToMainMenuCoroutine(){
+        yield return new WaitForSeconds(1);
+        GameManager.Instance.ChangeScene("Main Menu", Vector2.zero);
+    }
+
     public void GoToOptions(){
         Debug.LogFormat("{0} music, {1} chunk ", GameManager.Instance.musicLvl, GameManager.Instance.chunkLvl);
         if(GameManager.GameState.PAUSE.Equals(GameManager.Instance.gameState)){
@@ -57,6 +69,11 @@ public class CanvasController : MonoBehaviour
                 animator.SetTrigger("changeScene");
             break;
         }
+    }
+
+    
+    private void ChangeScene(){
+        GameManager.Instance.LoadScene();
     }
 
     public void ChangeTimeScale(float newScale){

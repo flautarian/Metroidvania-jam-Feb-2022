@@ -1695,7 +1695,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 51384162}
         m_TargetAssemblyTypeName: CanvasController, Assembly-CSharp
-        m_MethodName: ReturnToGame
+        m_MethodName: SaveGoMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1800,7 +1800,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Exit
+  m_text: Save and exit
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0b0dd7487c37b8c48987ddfec8bc5481, type: 2}
   m_sharedMaterial: {fileID: -6716376736224344485, guid: 0b0dd7487c37b8c48987ddfec8bc5481, type: 2}

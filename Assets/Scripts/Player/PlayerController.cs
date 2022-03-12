@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
             : 0f;
         vertical = Input.GetAxisRaw("Vertical");
 
-        if(Input.GetButtonDown("Submit"))
+        if(Input.GetButton("Submit"))
             GameManager.Instance.ChangeState(GameManager.GameState.PAUSE);
 
         if(vertical >= 0f){
