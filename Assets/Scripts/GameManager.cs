@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public enum GameState{
-        INGAME, PAUSE, OPTIONS, CINEMATICS, DIALOGUE, CHANGESCENE
+        INGAME, PAUSE, OPTIONS, CINEMATICS, DIALOGUE, CHANGESCENE, GAMEOVER
     }
     public static GameManager Instance { get; private set; }
     // savegame
@@ -51,10 +51,37 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void AddLifeItemCatch(int id){
+        if(saveGame.data.hearts.Length > id && saveGame.data.hearts[id] == 0){
+            saveGame.data.hearts[id] = 1;
+            saveGame.data.lifeBonus++;
+            maxLife = 50 + saveGame.data.lifeBonus * 10;
+            actualLife = maxLife;
+            if(OnHurt != null)
+                OnHurt();
+        }
+    }
+
+    public bool IsHearthTaken(int id){
+        return (saveGame.data.hearts.Length > id && saveGame.data.hearts[id] == 1);
+    }
+    public bool IsForceTaken(int id){
+        return (saveGame.data.force.Length > id && saveGame.data.force[id] == 1);
+    }
+
+    public void AddForceItemCatch(int id){
+        if(saveGame.data.force.Length > id && saveGame.data.force[id] == 0){
+            saveGame.data.force[id] = 1;
+            saveGame.data.basicAttack+=5;
+        }
+    }
+
     public void RefreshSaveGameCachedData(){
         musicLvl = saveGame.data.musicLvl;
         chunkLvl = saveGame.data.chunkLvl;
         maxLife = 50 + saveGame.data.lifeBonus * 10;
+        nextScene = saveGame.data.actualScene;
+        nextPlayerPosition = new Vector2(saveGame.data.playerLocationX, saveGame.data.playerLocationY);
         actualLife = saveGame.data.actualLife;
         actualCoins = saveGame.data.coins;
         if(OnGainCoins != null)
@@ -75,21 +102,27 @@ public class GameManager : MonoBehaviour
     }
 
     public void ChangeScene(string nextScn, Vector2 nextPlayerPos){
-        if(GMPools != null)
-            GMPools.Clear();
+        if(String.Empty.Equals(nextScn))return;
         nextScene = nextScn;
         if(!nextScn.Equals("Main Menu")){
+            Debug.Log("saving and changing to scene " + nextScn);
             nextPlayerPosition = nextPlayerPos;
             saveGame.data.actualScene = nextScene;
             saveGame.data.playerLocationX = nextPlayerPos.x;
             saveGame.data.playerLocationY = nextPlayerPos.y;
+            SaveGame();
         }
         gameState = GameState.CHANGESCENE;
         OnChangeGameState(gameState);
     }
 
     public void LoadScene(){
-        Debug.Log(nextScene);
+        if(GMPools != null){
+            foreach(KeyValuePair<string, GameObjectsPool>  pool in GMPools){
+                Destroy(pool.Value);
+            }
+            GMPools.Clear();
+        }
         SceneManager.LoadScene(nextScene);
     }
 
@@ -176,8 +209,16 @@ public class GameManager : MonoBehaviour
         return saveGame.data.doubleJumpUnlocked;
     }
 
+    public void EnableDoubleJump(){
+        saveGame.data.doubleJumpUnlocked = true;
+    }
+
     public bool CanDuckSlash(){
         return saveGame.data.duckSlashUnlocked;
+    }
+
+    public void EnableDuckSlash(){
+        saveGame.data.duckSlashUnlocked = true;
     }
 
     public void SetChunkLvl(float value){

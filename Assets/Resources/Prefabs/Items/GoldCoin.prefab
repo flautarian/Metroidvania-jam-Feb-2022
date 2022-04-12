@@ -71,6 +71,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 439649769271287616}
+  itemDialog: {fileID: 0}
+  id: 0
+  itemSpecialType: 4
 --- !u!1 &5663375686178922381
 GameObject:
   m_ObjectHideFlags: 0

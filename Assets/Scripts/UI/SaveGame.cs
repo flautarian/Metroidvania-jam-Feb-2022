@@ -5,9 +5,11 @@ using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
+[System.Serializable]
 public class SaveGame : MonoBehaviour
 {
-    public SaveData data;
+    [SerializeField]
+    internal SaveData data;
 
     private void Awake() {
         data = LoadGameData();
@@ -51,13 +53,13 @@ public class SaveGame : MonoBehaviour
         return newSaveData;
     }
 
-    [Serializable]
+    [System.Serializable]
     public class SaveData{
         internal int[] hearts = new int[10]{0,0,0,0,0,0,0,0,0,0};
-        internal int[] flowers = new int[10]{0,0,0,0,0,0,0,0,0,0};
+        internal int[] force = new int[10]{0,0,0,0,0,0,0,0,0,0};
         internal bool doubleJumpUnlocked = false;
         internal bool duckSlashUnlocked = false;
-        internal string actualScene = string.Empty;
+        internal string actualScene = "start 1-1";
         internal float playerLocationX = 0;
         internal float playerLocationY = 0;
         internal bool vialTime = false;

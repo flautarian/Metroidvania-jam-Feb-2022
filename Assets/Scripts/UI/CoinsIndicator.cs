@@ -18,10 +18,4 @@ public class CoinsIndicator : MonoBehaviour
     private void OnDestroy() {
         GameManager.OnGainCoins -= UpdateIndicator;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

@@ -9,20 +9,26 @@ public class DialogUI : MonoBehaviour
     [SerializeField]
     private TypeWriterEffect typeWriterEffect;
 
-    private bool dialogueOccupied = false;
+    private ResponseHandler responseHandler;
+
+    internal bool dialogueOccupied = false;
 
     private void Start() {
         typeWriterEffect = GetComponent<TypeWriterEffect>();
+        responseHandler = GetComponent<ResponseHandler>();
         SignController.OnOpenDialogue += ShowDialogue;
+        ItemController.OnOpenDialogue += ShowDialogue;
     }
 
     private void OnDestroy() {
-        SignController.OnOpenDialogue -= ShowDialogue;        
+        SignController.OnOpenDialogue -= ShowDialogue;      
+        ItemController.OnOpenDialogue -= ShowDialogue;  
     }
 
     public void ShowDialogue(DialogObject dialogObject){
         if(!dialogueOccupied){
-            GameManager.Instance.ChangeState(GameManager.GameState.DIALOGUE);
+            if(GameManager.Instance.gameState != GameManager.GameState.DIALOGUE)
+                GameManager.Instance.ChangeState(GameManager.GameState.DIALOGUE);
             StartCoroutine(ShowDialogeStep(dialogObject));
         }
     }
@@ -31,15 +37,21 @@ public class DialogUI : MonoBehaviour
         dialogueOccupied = true;
         textPanel.text = string.Empty;
         yield return new WaitForSeconds(1);
-        foreach(string dialogue in dialogObject.Dialoge){
-            yield return typeWriterEffect.Run(dialogue, textPanel);
+        for(int i =0; i < dialogObject.Dialoge.Length; i++){
+            yield return typeWriterEffect.Run(dialogObject.Dialoge[i], textPanel);
             yield return new WaitUntil(() => Input.GetButton("Fire1") || Input.GetAxisRaw("Horizontal") != 0);
-            if(Input.GetAxisRaw("Horizontal") != 0)
+            if(i == dialogObject.Dialoge.Length -1 && dialogObject.HasResponses || Input.GetAxisRaw("Horizontal") != 0)
                 break;
         }
-        GameManager.Instance.ChangeState(GameManager.GameState.INGAME);
-        yield return new WaitForSeconds(3);
-        dialogueOccupied = false;
+
+        if(dialogObject.HasResponses && Input.GetAxisRaw("Horizontal") == 0){
+            responseHandler.ShowResponses(dialogObject.Responses);
+        }
+        else{
+            GameManager.Instance.ChangeState(GameManager.GameState.INGAME);
+            yield return new WaitForSeconds(3);
+            dialogueOccupied = false;
+        }
     }
 
 }

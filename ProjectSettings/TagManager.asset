@@ -15,6 +15,11 @@ TagManager:
   - SpecialGO/Objects/PlateCoin
   - SpecialGO/Objects/Flower
   - SpecialGO/Objects/BronzeCoin
+  - SpecialGO/Objects/DJump
+  - SpecialGO/Objects/Slash
+  - SpecialGO/Objects/Force
+  - SpecialGO/Objects/Life
+  - SpecialGO/Objects/Bread
   layers:
   - Default
   - TransparentFX

@@ -128,7 +128,7 @@ MonoBehaviour:
   life: 15
   mustPatrol: 1
   alterable: 1
-  enemyType: 2
+  enemyType: 1
   groundChecker: {fileID: 3837362454859103289}
   followEnabled: 1
   enemyTransform: {fileID: 490129186977057477}
@@ -140,16 +140,12 @@ MonoBehaviour:
   jumpNodeListMinRequirement: 5
   jumpModifier: 0.3
   jumpCheckOffset: 0.1
-  dropOptions: 0000000002000000020000000200000003000000
+  dropOptions: 0000000002000000010000000200000004000000
   dropQuantity: 2
   shotPrefabNameAndPath: 
   patrolObjective: 0
   patrolOrientation: 1
-  patrolPlaces:
-  - {x: 16, y: 5.25}
-  - {x: 10, y: 8.75}
-  - {x: 2, y: 8.75}
-  - {x: -9, y: 0.35}
+  patrolPlaces: []
   playerChecker: {fileID: 8762360268588979014}
 --- !u!1 &6261024348272086203
 GameObject:

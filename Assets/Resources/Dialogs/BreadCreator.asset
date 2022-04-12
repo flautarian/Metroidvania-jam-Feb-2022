@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a7fadcda02b0644090a590dc9ab821b, type: 3}
+  m_Name: BreadCreator
+  m_EditorClassIdentifier: 
+  dialogue:
+  - Hi hi hi!!
+  - I present, my name is easious the bread creator!!
+  - maybe I don't have the outfit of a baker but.............in my town the bakers
+    dress like magicians
+  - I think you are the one who is searching se bread uhh
+  - 'It''s your lucky day!, if you pay me 5000 coins I will craft one for you!! '
+  - Is this or go to forest and try to get yours with an exiting adventure, is your
+    election.
+  - So, what do you decide?
+  responses:
+  - responseText: Pay him
+    nextDialogue: {fileID: 11400000, guid: 99de4a428e7c1c34cb5fe4c6b0b084af, type: 2}
+    responseType: 0
+  - responseText: Bye
+    nextDialogue: {fileID: 11400000, guid: 0b19d62674b7213499e90de6ba1c0fe6, type: 2}
+    responseType: 1

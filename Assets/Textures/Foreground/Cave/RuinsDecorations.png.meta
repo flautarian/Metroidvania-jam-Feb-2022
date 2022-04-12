@@ -11,6 +11,9 @@ TextureImporter:
   - first:
       213: -2788821123286270649
     second: RuinsDecorations_2
+  - first:
+      213: 583874766947547175
+    second: RuinsDecorations_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -158,6 +161,27 @@ TextureImporter:
       bones: []
       spriteID: 74d7a64d6fd1c49d0800000000000000
       internalID: -2788821123286270649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RuinsDecorations_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 728f83dc1075a1800800000000000000
+      internalID: 583874766947547175
       vertices: []
       indices: 
       edges: []

@@ -27,14 +27,12 @@ public class CanvasController : MonoBehaviour
         GameManager.Instance.SaveGame();
     }
 
-    public void SaveGoMainMenu(){
-        animator.SetTrigger("changeScene");
-        GameManager.Instance.SaveGame();
-        StartCoroutine(GoToMainMenuCoroutine());
+    public void RefreshIndicators(){
+        GameManager.Instance.RefreshSaveGameCachedData();
     }
 
-    private IEnumerator GoToMainMenuCoroutine(){
-        yield return new WaitForSeconds(1);
+    public void SaveGoMainMenu(){
+        GameManager.Instance.SaveGame();
         GameManager.Instance.ChangeScene("Main Menu", Vector2.zero);
     }
 
@@ -68,15 +66,20 @@ public class CanvasController : MonoBehaviour
             case GameManager.GameState.CHANGESCENE:
                 animator.SetTrigger("changeScene");
             break;
+            case GameManager.GameState.GAMEOVER:
+                animator.SetTrigger("gameover");
+            break;
         }
     }
 
-    
+    public void ReloadScene(){
+        animator.SetTrigger("changeScene");
+    }
     private void ChangeScene(){
         GameManager.Instance.LoadScene();
     }
 
-    public void ChangeTimeScale(float newScale){
+    public void ChangeTimeScale(float newScale){   
         Time.timeScale = newScale;
     }
 

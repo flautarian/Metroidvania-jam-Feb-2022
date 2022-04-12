@@ -21,9 +21,13 @@ public class MainMenuCanvasController : MonoBehaviour
             animator.SetTrigger("skipEntrance");
     }
 
+    public void QuitGame(){
+        Application.Quit();
+    }
+
     public void GoToGame(){
         if(GameManager.Instance.HasNewGame())
-            GameManager.Instance.ChangeScene("Town 1-1", new Vector2(50f, -6.5f));
+            GameManager.Instance.ChangeScene("start 1-1", new Vector2(50f, -6.5f));
         else
             GameManager.Instance.ChangeScene(GameManager.Instance.saveGame.data.actualScene,
              new Vector2(GameManager.Instance.saveGame.data.playerLocationX,

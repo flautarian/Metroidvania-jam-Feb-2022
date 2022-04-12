@@ -38,6 +38,10 @@ public class Constants
     public const string TAG_GOLD_COIN = "SpecialGO/Objects/GoldCoin";
     public const string TAG_PLATE_COIN = "SpecialGO/Objects/PlateCoin";
     public const string TAG_BRONZE_COIN = "SpecialGO/Objects/BronzeCoin";
+    public const string TAG_DJUMP = "SpecialGO/Objects/DJump";
+    public const string TAG_SLASH = "SpecialGO/Objects/Slash";
+    public const string TAG_FORCE = "SpecialGO/Objects/Force";
+    public const string TAG_LIFE = "SpecialGO/Objects/Life";
 
     public const string TAG_ENEMY_SHOOT = "EnemyShot";
 }

@@ -125,7 +125,7 @@ MonoBehaviour:
   animator: {fileID: 8035186383158212545}
   speed: 5
   attack: 10
-  life: 50
+  life: 20
   mustPatrol: 1
   alterable: 1
   enemyType: 1
@@ -140,8 +140,8 @@ MonoBehaviour:
   jumpNodeListMinRequirement: 10
   jumpModifier: 10
   jumpCheckOffset: 0.1
-  dropOptions: 000000000000000001000000010000000400000002000000
-  dropQuantity: 3
+  dropOptions: 000000000400000004000000010000000100000002000000
+  dropQuantity: 2
   shotPrefabNameAndPath: 
   playerChecker: {fileID: 2346308991739015400}
   goRight: 1

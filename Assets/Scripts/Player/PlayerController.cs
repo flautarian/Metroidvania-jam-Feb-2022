@@ -26,8 +26,6 @@ public class PlayerController : MonoBehaviour
     private CapsuleCollider2D col;
     [SerializeField]
     private bool grounded = false;
-    [SerializeField]
-    private Vector2 duckCol, jumpCol, normalCol;
     Animator animator;
     SpriteRenderer spriteRenderer;
 
@@ -183,7 +181,18 @@ public class PlayerController : MonoBehaviour
                 var bcoin = other.transform.parent.name;
                 GameManager.Instance.ReturnToPool(bcoin, other.transform.parent.gameObject);
                 break;
+            case Constants.TAG_LIFE: 
+            case Constants.TAG_DJUMP:
+            case Constants.TAG_FORCE:
+            case Constants.TAG_SLASH:
+                GameManager.Instance.RequestAndExecuteGameObject(Constants.PARTICLE_PLAYER_TAKES_LIFE, transform.position);
+                break;
         };
+        if(other.gameObject.tag.Contains("SpecialGO/Objects/")){
+            if(other.TryGetComponent<ItemController>(out ItemController item)){
+                item.OnCatchItem();
+            }
+        }
     }
 
     internal void HurtPlayer(int enemyAttack, Vector2 otherPosition){
@@ -213,7 +222,7 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded() {
         float extraHeightText = 0.05f;
-        RaycastHit2D raycastHit = Physics2D.BoxCast(col.bounds.center, col.bounds.size, 0f, Vector2.down, extraHeightText, platformLayerMask);
+        RaycastHit2D raycastHit = Physics2D.BoxCast(col.bounds.center - col.bounds.size/2, col.bounds.size/2, 0f, Vector2.down, extraHeightText, platformLayerMask);
 
         Color rayColor;
         if (raycastHit.collider != null) {
@@ -231,5 +240,9 @@ public class PlayerController : MonoBehaviour
 
     private void DuckSlash(){
         slashForceValue = slashForce * (spriteRenderer.flipX ? -1 : 1);
+    }
+
+    public void InstantiateGameOverCanvas(){
+        GameManager.Instance.ChangeState(GameManager.GameState.GAMEOVER);
     }
 }

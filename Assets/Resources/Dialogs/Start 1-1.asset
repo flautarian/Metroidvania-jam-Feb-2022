@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a7fadcda02b0644090a590dc9ab821b, type: 3}
+  m_Name: Start 1-1
+  m_EditorClassIdentifier: 
+  dialogue:
+  - Hello and welcome to "Go for the bread"!
+  - This metroidvania consists on one thing, and this thing is to get accomplish
+    the bread
+  - Use WASD to move, space to jump and click or Ctrl to attack
+  - I hope you like my game! :D
